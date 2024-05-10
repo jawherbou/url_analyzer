@@ -16,7 +16,9 @@ The main focus of our work and the difficult part would be get the web page anal
 - Using a third party library or api to get these information 
 - Using a golang module that would parse the web page contents
 
-First option was a dead end; no open source API available that can provide what we need. So I had to think about the second option. A quick search led me to find that using the net/http module I would be able to get the contents of a webpage from a url. Then using regex and searching for html tags in the contents would be doable. 
+First option was a dead end; no open source API available that can provide what we need. So I had to think about the second option. A quick search led me to find that using the net/http module I would be able to get the contents of a webpage from a url. Then using regex and searching for html tags in the contents would be doable.
+
+After some trial and error, I found that parsing the html contents could be a problem and I discovered `golang.org/x/net/html` module which help to tokenize html files and run through these tokens easily.
 
 # Tools and POC
 So now it is decided; we will start the POC parsing the contents of the response that we get from the net/http getUrl method.
