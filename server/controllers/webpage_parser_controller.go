@@ -42,6 +42,10 @@ func GetAnalysis(c *fiber.Ctx) error {
 	htmlVersionParser := parsers.NewHtmlVersionParser()
 	htmlVersionParser.Parse(string(body), analysis)
 
+	// set login form status
+	loginFormParser := parsers.NewLoginFormParser()
+	loginFormParser.Parse(string(body), analysis)
+
 	log.Println(analysis)
 
 	// Return status 200 OK.

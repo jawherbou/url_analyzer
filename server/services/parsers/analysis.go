@@ -1,12 +1,14 @@
 package parsers
 
 type AnalysisResponse interface {
-
 	// setting the page title.
 	SetTitle(title string)
 
 	// setting the page html version.
 	SetHtmlVersion(version string)
+
+	// setting if page has login or not.
+	SetHasLogin(hasLogin bool)
 }
 
 func NewAnalysisResponse() AnalysisResponse {
@@ -14,8 +16,9 @@ func NewAnalysisResponse() AnalysisResponse {
 }
 
 type AnalysisSuccessResponse struct {
-	title   string
-	version string
+	title    string
+	version  string
+	hasLogin bool
 }
 
 func (ap *AnalysisSuccessResponse) SetTitle(title string) {
@@ -24,4 +27,8 @@ func (ap *AnalysisSuccessResponse) SetTitle(title string) {
 
 func (ap *AnalysisSuccessResponse) SetHtmlVersion(version string) {
 	ap.version = version
+}
+
+func (ap *AnalysisSuccessResponse) SetHasLogin(hasLogin bool) {
+	ap.hasLogin = hasLogin
 }
