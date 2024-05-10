@@ -1,4 +1,4 @@
-module main
+module github.com/jawherbou/url_analyzer/server
 
 go 1.22.3
 
