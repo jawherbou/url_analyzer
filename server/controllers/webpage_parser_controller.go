@@ -4,10 +4,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/net/html"
+	"github.com/jawherbou/url_analyzer/server/services/parsers"
 )
 
 func GetAnalysis(c *fiber.Ctx) error {
@@ -32,30 +31,22 @@ func GetAnalysis(c *fiber.Ctx) error {
 		})
 	}
 
-	tokenizer := html.NewTokenizer(strings.NewReader(string(body)))
+	// create report
+	analysis := parsers.NewAnalysisResponse()
 
-	var title string
+	// get text
+	titleParser := parsers.NewTitleParser()
+	titleParser.Parse(string(body), analysis)
 
-out:
-	for {
-		switch tokenizer.Next() {
-		case html.StartTagToken:
-			token := tokenizer.Token()
-			if token.Data == "title" {
-				tokenizer.Next()
-				log.Println("Getting the title:", tokenizer.Token().Data)
-				title = tokenizer.Token().Data
-				break out
-			}
-		case html.ErrorToken:
-			break out
-		}
-	}
+	// get html version
+	htmlVersionParser := parsers.NewHtmlVersionParser()
+	htmlVersionParser.Parse(string(body), analysis)
+
+	log.Println(analysis)
 
 	// Return status 200 OK.
 	return c.JSON(fiber.Map{
 		"error": false,
 		"msg":   nil,
-		"title": title,
 	})
 }
