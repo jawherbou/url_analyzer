@@ -50,7 +50,9 @@ func GetAnalysis(c *fiber.Ctx) error {
 	headingsParser := parsers.NewHeadingsParser()
 	headingsParser.Parse(string(body), analysis)
 
-	log.Println(analysis)
+	// add links
+	linksParser := parsers.NewLinksParser()
+	linksParser.Parse(string(body), resp.Request.Host, analysis)
 
 	// Return status 200 OK.
 	return c.JSON(analysis)

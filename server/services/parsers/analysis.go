@@ -12,64 +12,80 @@ type AnalysisResponse interface {
 
 	// add heading and its level
 	AddHeading(heading string, level string)
+
+	// add link
+	AddLink(link Link)
 }
 
 func NewAnalysisResponse() AnalysisResponse {
 	headings := make([]Heading, 0)
+	links := make([]Link, 0)
 	return &AnalysisSuccessResponse{
-		headings: headings,
+		Headings: headings,
+		Links:    links,
 	}
 }
 
 type AnalysisSuccessResponse struct {
-	title    string
-	version  string
-	hasLogin bool
-	headings []Heading
+	Title    string    `json:"title"`
+	Version  string    `json:"htmlVersion"`
+	HasLogin bool      `json:"hasLogin"`
+	Headings []Heading `json:"headings"`
+	Links    []Link    `json:"links"`
 }
 
 type Heading struct {
-	tagName string
-	levels  []string
+	TagName  string   `json:"tagName"`
+	Contents []string `json:"contents"`
+}
+
+type Link struct {
+	Url       string `json:"url"`
+	LinkType  string `json:"linkType"`
+	Reachable bool   `json:"reachable"`
 }
 
 func (ap *AnalysisSuccessResponse) SetTitle(title string) {
-	ap.title = title
+	ap.Title = title
 }
 
 func (ap *AnalysisSuccessResponse) SetHtmlVersion(version string) {
-	ap.version = version
+	ap.Version = version
 }
 
 func (ap *AnalysisSuccessResponse) SetHasLogin(hasLogin bool) {
-	ap.hasLogin = hasLogin
+	ap.HasLogin = hasLogin
 }
 
-func (ap *AnalysisSuccessResponse) AddHeading(tag string, level string) {
+func (ap *AnalysisSuccessResponse) AddHeading(tag string, content string) {
 	// if headings is empty
-	if len(ap.headings) == 0 {
-		levels := make([]string, 0)
-		levels = append(levels, level)
-		ap.headings = append(ap.headings, Heading{
-			tagName: tag,
-			levels:  levels,
+	if len(ap.Headings) == 0 {
+		contents := make([]string, 0)
+		contents = append(contents, content)
+		ap.Headings = append(ap.Headings, Heading{
+			TagName:  tag,
+			Contents: contents,
 		})
 		return
 	}
 
-	for i, heading := range ap.headings {
-		if heading.tagName == tag {
-			heading.levels = append(heading.levels, level)
-			ap.headings[i] = heading
+	for i, heading := range ap.Headings {
+		if heading.TagName == tag {
+			heading.Contents = append(heading.Contents, content)
+			ap.Headings[i] = heading
 			break
 		}
-		if i == len(ap.headings)-1 {
-			levels := make([]string, 0)
-			levels = append(levels, level)
-			ap.headings = append(ap.headings, Heading{
-				tagName: tag,
-				levels:  levels,
+		if i == len(ap.Headings)-1 {
+			contents := make([]string, 0)
+			contents = append(contents, content)
+			ap.Headings = append(ap.Headings, Heading{
+				TagName:  tag,
+				Contents: contents,
 			})
 		}
 	}
+}
+
+func (ap *AnalysisSuccessResponse) AddLink(link Link) {
+	ap.Links = append(ap.Links, link)
 }
