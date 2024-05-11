@@ -1,12 +1,9 @@
 package controllers
 
 import (
-	"io"
-	"log"
-	"net/http"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/jawherbou/url_analyzer/server/services/parsers"
+	"github.com/jawherbou/url_analyzer/server/services/urls"
 )
 
 func GetAnalysis(c *fiber.Ctx) error {
@@ -14,22 +11,16 @@ func GetAnalysis(c *fiber.Ctx) error {
 	// get url from query
 	url := c.Query("url")
 
-	resp, err := http.Get(url)
+	urlParser := urls.NewUrlInfo()
+	urlInfo, err := urlParser.GetUrlInfo(url)
 	if err != nil {
-		log.Println("Error occurred when getting the response", err)
 		return c.Status(fiber.ErrBadRequest.Code).JSON(fiber.Map{
 			"err": err,
 		})
 	}
-	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("Error occurred when reading the response", err)
-		return c.Status(fiber.ErrBadRequest.Code).JSON(fiber.Map{
-			"err": err,
-		})
-	}
+	body := urlInfo.Body
+	host := urlInfo.Host
 
 	// create report
 	analysis := parsers.NewAnalysisResponse()
@@ -52,7 +43,7 @@ func GetAnalysis(c *fiber.Ctx) error {
 
 	// add links
 	linksParser := parsers.NewLinksParser()
-	linksParser.Parse(string(body), resp.Request.Host, analysis)
+	linksParser.Parse(string(body), host, analysis)
 
 	// Return status 200 OK.
 	return c.JSON(analysis)
