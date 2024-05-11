@@ -46,11 +46,12 @@ func GetAnalysis(c *fiber.Ctx) error {
 	loginFormParser := parsers.NewLoginFormParser()
 	loginFormParser.Parse(string(body), analysis)
 
+	// add headings
+	headingsParser := parsers.NewHeadingsParser()
+	headingsParser.Parse(string(body), analysis)
+
 	log.Println(analysis)
 
 	// Return status 200 OK.
-	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-	})
+	return c.JSON(analysis)
 }

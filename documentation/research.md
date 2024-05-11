@@ -5,7 +5,7 @@ This document will serve as a place to write down my brainstorming outcome and r
 Web page that analyses web pages and by analysis we mean:
 - html version
 - Page title
-- Headings and their levels
+- Headings and their levels (I would assume level here means the header's type ex: h1, h2, ...)
 - Internal and external links and their accessibility 
 - If the page contains a login form
 
