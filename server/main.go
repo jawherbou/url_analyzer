@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/jawherbou/url_analyzer/server/middlewares"
 	"github.com/jawherbou/url_analyzer/server/routes"
 
@@ -17,5 +19,8 @@ func main() {
 	routes.PublicRoutes(app)  // Register a public routes for app.
 	routes.NotFoundRoute(app) // Register route for 404 Error.
 
-	app.Listen(":3000")
+	err := app.Listen(":3000")
+	if err != nil {
+		log.Fatalf("Error starting Fiber server: %v", err)
+	}
 }
