@@ -11,19 +11,10 @@ type AnalysisResponse interface {
 	SetHasLogin(hasLogin bool)
 
 	// add heading and its level
-	AddHeading(heading string, level string)
+	AddHeading(heading string, content string)
 
 	// add link
 	AddLink(link Link)
-}
-
-func NewAnalysisResponse() AnalysisResponse {
-	headings := make([]Heading, 0)
-	links := make([]Link, 0)
-	return &AnalysisSuccessResponse{
-		Headings: headings,
-		Links:    links,
-	}
 }
 
 type AnalysisSuccessResponse struct {
@@ -43,6 +34,15 @@ type Link struct {
 	Url       string `json:"url"`
 	LinkType  string `json:"linkType"`
 	Reachable bool   `json:"reachable"`
+}
+
+func NewAnalysisResponse() AnalysisResponse {
+	headings := make([]Heading, 0)
+	links := make([]Link, 0)
+	return &AnalysisSuccessResponse{
+		Headings: headings,
+		Links:    links,
+	}
 }
 
 func (ap *AnalysisSuccessResponse) SetTitle(title string) {

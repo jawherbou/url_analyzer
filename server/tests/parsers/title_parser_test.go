@@ -8,35 +8,6 @@ import (
 	"github.com/jawherbou/url_analyzer/server/services/parsers"
 )
 
-// MockAnalysisResponse is a mock implementation of the AnalysisResponse interface
-type MockAnalysisResponse struct {
-	Title string
-}
-
-// AddHeading implements parsers.AnalysisResponse.
-func (m *MockAnalysisResponse) AddHeading(heading string, level string) {
-	panic("unimplemented")
-}
-
-// AddLink implements parsers.AnalysisResponse.
-func (m *MockAnalysisResponse) AddLink(link parsers.Link) {
-	panic("unimplemented")
-}
-
-// SetHasLogin implements parsers.AnalysisResponse.
-func (m *MockAnalysisResponse) SetHasLogin(hasLogin bool) {
-	panic("unimplemented")
-}
-
-// SetHtmlVersion implements parsers.AnalysisResponse.
-func (m *MockAnalysisResponse) SetHtmlVersion(version string) {
-	panic("unimplemented")
-}
-
-// SetTitle is a mock implementation of the SetTitle method
-func (m *MockAnalysisResponse) SetTitle(title string) {
-	m.Title = title
-}
 func Test_ParseTitle(t *testing.T) {
 	htmlData := "<title>Sample Title</title>"
 
@@ -47,5 +18,16 @@ func Test_ParseTitle(t *testing.T) {
 
 	expectedTitle := "Sample Title"
 	assert.Equal(t, expectedTitle, mockAnalysis.Title, "SetTitle should be called with the expected title")
+}
 
+func Test_ParseEmptyTitle(t *testing.T) {
+	htmlData := ""
+
+	mockAnalysis := &MockAnalysisResponse{}
+	titleParser := parsers.NewTitleParser()
+
+	titleParser.Parse(htmlData, mockAnalysis)
+
+	expectedTitle := ""
+	assert.Equal(t, expectedTitle, mockAnalysis.Title, "SetTitle should not be called if no title exists")
 }
