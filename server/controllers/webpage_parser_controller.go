@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jawherbou/url_analyzer/server/services/parsers"
 	"github.com/jawherbou/url_analyzer/server/services/urls"
@@ -9,7 +11,7 @@ import (
 func GetAnalysis(c *fiber.Ctx) error {
 
 	// get url from query
-	url := c.Query("url")
+	url := strings.TrimSpace(c.Query("url"))
 
 	urlParser := urls.NewUrlInfo()
 	urlInfo, err := urlParser.GetUrlInfo(url)
@@ -25,24 +27,26 @@ func GetAnalysis(c *fiber.Ctx) error {
 	// create report
 	analysis := parsers.NewAnalysisResponse()
 
-	// get text
+	// initiate parsers
 	titleParser := parsers.NewTitleParser()
+	htmlVersionParser := parsers.NewHtmlVersionParser()
+	loginFormParser := parsers.NewLoginFormParser()
+	headingsParser := parsers.NewHeadingsParser()
+	linksParser := parsers.NewLinksParser()
+
+	// get text
 	titleParser.Parse(string(body), analysis)
 
 	// get html version
-	htmlVersionParser := parsers.NewHtmlVersionParser()
 	htmlVersionParser.Parse(string(body), analysis)
 
 	// set login form status
-	loginFormParser := parsers.NewLoginFormParser()
 	loginFormParser.Parse(string(body), analysis)
 
 	// add headings
-	headingsParser := parsers.NewHeadingsParser()
 	headingsParser.Parse(string(body), analysis)
 
 	// add links
-	linksParser := parsers.NewLinksParser()
 	linksParser.Parse(string(body), host, analysis)
 
 	// Return status 200 OK.
