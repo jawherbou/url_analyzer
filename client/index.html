@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Url Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="label">
+        Provide the webpage url to analyze:
+    </div>
+
+    <div class="input-group">
+        <input 
+            value=""
+            class="form-control" 
+            type="text" 
+            name="text" 
+            id="text"
+            required="required"
+            placeholder="Your webpage url"
+        >
+        <label for="text">Your webpage url</label>
+    </div>
+
+    <div>
+        <button role="button"> Analyze </button>
+    </div>
+
+    <div class="result">
+        <pre></pre>
+    </div>
+
+    <script>
+        const submitButton = document.querySelector("button");
+        const input = document.querySelector("input");
+        const result = document.querySelector("pre");
+
+        submitButton.addEventListener("click", submit);
+
+        function submit(e) {
+            const Http = new XMLHttpRequest();
+            const url=`http://localhost:3000/api/v1?url=${input.value}`;
+            Http.open("GET", url);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+                result.innerHTML =  JSON.stringify(JSON.parse(Http.responseText),undefined, 2)
+            }
+
+        }
+
+    </script>
+</body>
+
+</html>
